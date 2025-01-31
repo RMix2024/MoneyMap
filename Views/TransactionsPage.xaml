@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MoneyMap.Views.TransactionsPage"
+              xmlns:local="clr-namespace:MoneyMap.Converters"
+             Title="TransactionsPage">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter" />
+            <local:BalanceColorConverter x:Key="BalanceColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout>
+        <Entry x:Name="DescriptionEntry" Placeholder="Enter description"
+     WidthRequest="350" BackgroundColor="White" TextColor="black"/>
+
+        <Entry x:Name="AmountEntry" Placeholder="Enter amount" Keyboard="Numeric"
+     WidthRequest="350" BackgroundColor="White" TextColor="black"/>
+        
+        <Picker x:Name="TransactionTypePicker"
+        Title="Expense or Income"
+        WidthRequest="350"
+        ItemsSource="{Binding TransactionTypes}" 
+        SelectedIndexChanged="OnTransactionTypeChanged"
+        BackgroundColor="White" TextColor="black"/>
+
+
+        <Button Text="Add Transaction" Clicked="OnAddTransactionClicked"
+      WidthRequest="350" BackgroundColor="#D8BFD8"
+      TextColor="Black"/>
+
+        <!--Edit Mode Toggle-->
+        <!-- Edit Mode Toggle -->
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Label Text="Edit Mode" VerticalOptions="Center"/>
+            <Switch x:Name="EditModeSwitch"
+            Toggled="OnEditModeToggled"
+            ThumbColor="Gray"
+            OnColor="LightGray"/>
+        </StackLayout>
+
+        
+        <!--Total Box-->
+        <Border Stroke="Gray" StrokeThickness="2" BackgroundColor="#D6EAF8"
+        Margin="5" Padding="15" WidthRequest="350"
+        StrokeShape="RoundRectangle 10">
+            <VerticalStackLayout>
+                <Label Text="Total Balance" FontSize="20" FontAttributes="Bold"
+               HorizontalOptions="Center" TextColor="DarkBlue"/>
+
+                <Label Text="{Binding TotalBalance, StringFormat='${0:F2}'}"
+               FontSize="28" FontAttributes="Bold"
+               TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+               HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Border>
+
+
+        <!-- Transactions List -->
+        <CollectionView x:Name="TransactionsList" 
+                        ItemsSource="{Binding Transactions}" 
+                        Margin="10"
+                        HorizontalOptions="Center">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="Gray" StrokeThickness="2" BackgroundColor="#F4F6F7"
+                  Margin="5" Padding="10" WidthRequest="350"
+                  StrokeShape="RoundRectangle 10">
+                        <Grid Padding="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="Auto" />
+                               
+                                <ColumnDefinition Width="Auto" /> <!-- Column for buttons -->
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Transaction Description -->
+                            <Label Text="{Binding Description}" FontSize="18" Grid.Column="0"
+                         VerticalOptions="Center" TextColor="Black"/>
+
+                            <!-- Transaction Amount with Color Based on Type -->
+                            <Label Text="{Binding Amount, StringFormat='${0:F2}'}" FontSize="18"
+                         Grid.Column="1" HorizontalTextAlignment="End"
+                         VerticalOptions="Center"
+                        TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"/>
+
+                            <!-- Show Edit & Delete Buttons Only When Edit Mode is Enabled -->
+                            <HorizontalStackLayout Grid.Column="3" IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled}">
+                                <Button Text="✏️" FontSize="14"
+                                Clicked="OnEditTransactionClicked"
+                                CommandParameter="{Binding}" />
+                                <Button Text="🗑" FontSize="14"
+                                Clicked="OnDeleteTransactionClicked"
+                                CommandParameter="{Binding}" />
+                            </HorizontalStackLayout>
+                            
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

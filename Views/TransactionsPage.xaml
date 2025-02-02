@@ -1,105 +1,161 @@
-<?xml version="1.0" encoding="utf-8" ?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MoneyMap.Converters"
+             Style="{StaticResource DefaultPageStyle}"
              x:Class="MoneyMap.Views.TransactionsPage"
-              xmlns:local="clr-namespace:MoneyMap.Converters"
-             Title="TransactionsPage">
-    
+             BackgroundColor="#181818">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <local:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter" />
-            <local:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <VerticalStackLayout>
-        <Entry x:Name="DescriptionEntry" Placeholder="Enter description"
-     WidthRequest="350" BackgroundColor="White" TextColor="black"/>
+    <ScrollView>
+        <VerticalStackLayout Padding="25" Spacing="20">
 
-        <Entry x:Name="AmountEntry" Placeholder="Enter amount" Keyboard="Numeric"
-     WidthRequest="350" BackgroundColor="White" TextColor="black"/>
-        
-        <Picker x:Name="TransactionTypePicker"
-        Title="Expense or Income"
-        WidthRequest="350"
-        ItemsSource="{Binding TransactionTypes}" 
-        SelectedIndexChanged="OnTransactionTypeChanged"
-        BackgroundColor="White" TextColor="black"/>
+            <!-- Title -->
+            <Label Text="Transactions"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#C6A0FF"
+                   Margin="0,0,0,10"/>
+
+            <!-- Input Section -->
+            <Border BackgroundColor="#252525" StrokeThickness="1" Stroke="#3A3A3A" StrokeShape="RoundRectangle 12">
+                <VerticalStackLayout Padding="15" Spacing="10">
+                    <Entry x:Name="DescriptionEntry"
+                           Placeholder="Enter description"
+                           TextColor="White"
+                           BackgroundColor="#333"
+                           HeightRequest="50"
+                           Margin="0,5"/>
+
+                    <Entry x:Name="AmountEntry"
+                           Placeholder="Enter amount"
+                           Keyboard="Numeric"
+                           TextColor="White"
+                           BackgroundColor="#333"
+                           HeightRequest="50"
+                           Margin="0,5"/>
+
+                    <Picker x:Name="TransactionTypePicker"
+                            Title="Select One"
+                            ItemsSource="{Binding TransactionTypes}"
+                            SelectedIndexChanged="OnTransactionTypeChanged"
+                            TextColor="White"
+                            BackgroundColor="#333"
+                            Margin="0,5"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Add Transaction Button -->
+            <Button Text="Add Transaction"
+                    Clicked="OnAddTransactionClicked"
+                    BackgroundColor="#D8BFD8"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="25"
+                    Margin="0,5"/>
+
+            <!-- Edit Mode Toggle -->
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Edit Mode"
+                       TextColor="White"
+                       VerticalOptions="Center"/>
+                <Switch x:Name="EditModeSwitch"
+                        Toggled="OnEditModeToggled"/>
+            </HorizontalStackLayout>
+
+         
+            <!-- Total Balance Display -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Balance"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="Blue"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Transactions List -->
+            <CollectionView x:Name="TransactionsList"
+                ItemsSource="{Binding Transactions}"
+                Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#1E1E1E"
+                    StrokeThickness="1"
+                    Stroke="#333"
+                    StrokeShape="RoundRectangle 10"
+                    Margin="2">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <!-- Description -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Amount -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Edit/Delete Buttons -->
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Transaction Description -->
+                                <Label Text="{Binding Description}"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           TextColor="White"
+                           Grid.Column="0"/>
+
+                                <!-- Transaction Amount (Colored Based on Type) -->
+                                <Label Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="End"
+                           TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"
+                           Grid.Column="1"/>
+
+                                <!-- Show Edit & Delete Buttons Only When Edit Mode is Enabled -->
+
+                                <HorizontalStackLayout Grid.Column="2"
+                                         IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled}">
+                                    
+                                    <Button BackgroundColor="Transparent" 
+                                            Padding="0"
+                                            Clicked="OnEditTransactionClicked"
+                                            CommandParameter="{Binding}" >
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#x270E;" FontFamily="FontAwesomeSolid" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
+
+                                    <Button BackgroundColor="Transparent"
+                                            Padding="0"
+                                             Clicked="OnDeleteTransactionClicked"
+                                             CommandParameter="{Binding}" >
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#x1F5D1;" FontFamily="FontAwesomeSolid" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
+                                    
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
 
-        <Button Text="Add Transaction" Clicked="OnAddTransactionClicked"
-      WidthRequest="350" BackgroundColor="#D8BFD8"
-      TextColor="Black"/>
-
-        <!--Edit Mode Toggle-->
-        <!-- Edit Mode Toggle -->
-        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Label Text="Edit Mode" VerticalOptions="Center"/>
-            <Switch x:Name="EditModeSwitch"
-            Toggled="OnEditModeToggled"
-            ThumbColor="Gray"
-            OnColor="LightGray"/>
-        </StackLayout>
-
-        
-        <!--Total Box-->
-        <Border Stroke="Gray" StrokeThickness="2" BackgroundColor="#D6EAF8"
-        Margin="5" Padding="15" WidthRequest="350"
-        StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout>
-                <Label Text="Total Balance" FontSize="20" FontAttributes="Bold"
-               HorizontalOptions="Center" TextColor="DarkBlue"/>
-
-                <Label Text="{Binding TotalBalance, StringFormat='${0:F2}'}"
-               FontSize="28" FontAttributes="Bold"
-               TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
-               HorizontalOptions="Center"/>
-            </VerticalStackLayout>
-        </Border>
 
 
-        <!-- Transactions List -->
-        <CollectionView x:Name="TransactionsList" 
-                        ItemsSource="{Binding Transactions}" 
-                        Margin="10"
-                        HorizontalOptions="Center">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Stroke="Gray" StrokeThickness="2" BackgroundColor="#F4F6F7"
-                  Margin="5" Padding="10" WidthRequest="350"
-                  StrokeShape="RoundRectangle 10">
-                        <Grid Padding="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="Auto" />
-                               
-                                <ColumnDefinition Width="Auto" /> <!-- Column for buttons -->
-                            </Grid.ColumnDefinitions>
 
-                            <!-- Transaction Description -->
-                            <Label Text="{Binding Description}" FontSize="18" Grid.Column="0"
-                         VerticalOptions="Center" TextColor="Black"/>
-
-                            <!-- Transaction Amount with Color Based on Type -->
-                            <Label Text="{Binding Amount, StringFormat='${0:F2}'}" FontSize="18"
-                         Grid.Column="1" HorizontalTextAlignment="End"
-                         VerticalOptions="Center"
-                        TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"/>
-
-                            <!-- Show Edit & Delete Buttons Only When Edit Mode is Enabled -->
-                            <HorizontalStackLayout Grid.Column="3" IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled}">
-                                <Button Text="✏️" FontSize="14"
-                                Clicked="OnEditTransactionClicked"
-                                CommandParameter="{Binding}" />
-                                <Button Text="🗑" FontSize="14"
-                                Clicked="OnDeleteTransactionClicked"
-                                CommandParameter="{Binding}" />
-                            </HorizontalStackLayout>
-                            
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

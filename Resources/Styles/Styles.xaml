@@ -13,6 +13,23 @@
         <Setter Property="SelectedIndicatorColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray100}}"/>
     </Style>
 
+    <!-- Default Style (For Mobile and Other Platforms) -->
+    <Style x:Key="DefaultPageStyle" TargetType="ContentPage">
+        <Setter Property="WidthRequest" Value="-1"/>
+        <!-- Auto-size -->
+<Setter Property="Content" Value="{OnPlatform iOS=Grid, Android=Grid, WinUI=Grid}"/>
+    </Style>
+
+
+
+    <!-- Windows-Specific Style (Limit Width) -->
+    <Style x:Key="WindowsPageStyle" TargetType="ContentPage">
+        <Setter Property="WidthRequest" Value="600"/>
+        
+     
+    </Style>
+
+
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <Setter Property="StrokeShape" Value="Rectangle"/>

@@ -7,17 +7,15 @@ namespace MoneyMap
         public App()
         {
             InitializeComponent();
-
-
-         // Apply Windows-specific style globally
-#if WINDOWS
-            Resources["DefaultPageStyle"] = Resources["WindowsPageStyle"];
-#endif
         
         }
-        protected override Window CreateWindow(IActivationState? activationState)
+        protected override Window CreateWindow(IActivationState activationState)
         {
-            return new Window(new AppShell());
+            var window = new Window(new AppShell());
+
+
+
+            return window;
         }
     }
 }

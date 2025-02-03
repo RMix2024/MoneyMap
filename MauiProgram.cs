@@ -1,5 +1,6 @@
 ﻿using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls;
 
 namespace MoneyMap
 {
@@ -18,6 +19,7 @@ namespace MoneyMap
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
+           
                 .UseMicrocharts(); //MicroCharts
 
 #if DEBUG

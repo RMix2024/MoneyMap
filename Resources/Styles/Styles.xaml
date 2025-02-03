@@ -29,6 +29,9 @@
      
     </Style>
 
+    <Style TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="#252525" />
+    </Style>
 
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />

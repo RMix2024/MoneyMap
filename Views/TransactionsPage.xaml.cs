@@ -1,4 +1,3 @@
-
 using MoneyMap.Models;
 using MoneyMap.Services;
 using MoneyMap.Data;
@@ -8,13 +7,27 @@ using System;
 
 namespace MoneyMap.Views;
 
-
 public partial class TransactionsPage : ContentPage
 {
     private readonly DatabaseService _databaseService;
     public ObservableCollection<Transaction> Transactions { get; set; } = [];
     public List<string> TransactionTypes { get; } = new List<string> { "Select One", "Income", "Expense" };
+
+    public List<string> Categories { get; } = new List<string>
+    {
+        "Select One", // Default unselected value
+        "Food & Dining",
+        "Bills & Utilities",
+        "Shopping",
+        "Entertainment",
+        "Transportation",
+        "Health & Fitness",
+        "Savings & Investments",
+        "Other"
+    };
+
     private TransactionType? selectedTransactionType = null;
+    private TransactionCategory? selectedCategory = null;
     private bool isEditMode = false;
 
     public TransactionsPage()
@@ -23,8 +36,9 @@ public partial class TransactionsPage : ContentPage
         _databaseService = new DatabaseService();
         LoadTransactions();
         BindingContext = this;
-        TransactionTypePicker.SelectedIndex = 0;
 
+        TransactionTypePicker.SelectedIndex = 0;
+        CategoryPicker.SelectedIndex = 0;
     }
 
     private void OnEditModeToggled(object sender, ToggledEventArgs e)
@@ -41,7 +55,6 @@ public partial class TransactionsPage : ContentPage
         {
             Transactions.Add(transaction);
         }
-
     }
 
     private void OnTransactionTypeChanged(object sender, EventArgs e)
@@ -52,6 +65,9 @@ public partial class TransactionsPage : ContentPage
             if (!string.IsNullOrEmpty(selectedValue))
             {
                 selectedTransactionType = Enum.Parse<TransactionType>(selectedValue);
+
+                // Hide category picker if "Income" is selected
+                CategoryPicker.IsVisible = selectedTransactionType == TransactionType.Expense;
             }
             else
             {
@@ -64,8 +80,37 @@ public partial class TransactionsPage : ContentPage
         }
     }
 
+    public Dictionary<string, TransactionCategory> CategoryMapping { get; } = new Dictionary<string, TransactionCategory>
+    {
+        { "Food & Dining", TransactionCategory.Food_And_Dining },
+        { "Bills & Utilities", TransactionCategory.Bills_And_Utilities },
+        { "Shopping", TransactionCategory.Shopping },
+        { "Entertainment", TransactionCategory.Entertainment },
+        { "Transportation", TransactionCategory.Transportation },
+        { "Health & Fitness", TransactionCategory.Health_And_Fitness },
+        { "Savings & Investments", TransactionCategory.Savings_And_Investments },
+        { "Other", TransactionCategory.Other }
+    };
 
-
+    private void OnCategoryChanged(object sender, EventArgs e)
+    {
+        if (CategoryPicker.SelectedIndex > 0) // Ignore "Select Category"
+        {
+            var selectedValue = CategoryPicker.SelectedItem?.ToString();
+            if (!string.IsNullOrEmpty(selectedValue) && CategoryMapping.ContainsKey(selectedValue))
+            {
+                selectedCategory = CategoryMapping[selectedValue];  // Map UI string to Enum
+            }
+            else
+            {
+                selectedCategory = null; // Prevents invalid selection
+            }
+        }
+        else
+        {
+            selectedCategory = null; // Reset if "Select Category"
+        }
+    }
 
     private void OnAddTransactionClicked(object sender, EventArgs e)
     {
@@ -87,12 +132,20 @@ public partial class TransactionsPage : ContentPage
             return;
         }
 
+        // Category is required **only for Expense transactions**
+        if (selectedTransactionType == TransactionType.Expense && selectedCategory == null)
+        {
+            DisplayAlert("Error", "Please select a category for expenses.", "OK");
+            return;
+        }
+
         var newTransaction = new Transaction
         {
             Description = DescriptionEntry.Text,
             Amount = amount,
             Date = DateTime.Now,
-            Type = selectedTransactionType.Value
+            Type = selectedTransactionType.Value,
+            Category = selectedTransactionType == TransactionType.Expense ? selectedCategory.Value : null
         };
 
         _databaseService.AddTransaction(newTransaction);
@@ -124,12 +177,36 @@ public partial class TransactionsPage : ContentPage
 
         // Ask for transaction type change
         string action = await DisplayActionSheet("Select Transaction Type", "Cancel", null, "Income", "Expense");
-        if (action != "Income" && action != "Expense") return;
+        if (action == "Cancel") return;
+
+        TransactionType newType = action == "Income" ? TransactionType.Income : TransactionType.Expense;
+
+        // Only ask for category if it is an expense
+        TransactionCategory? newCategory = transaction.Category; // Keep existing category by default
+        if (newType == TransactionType.Expense)
+        {
+            string categoryAction = await DisplayActionSheet("Select Category", "Cancel", null, Categories.ToArray());
+            if (categoryAction == "Cancel") return;
+
+            if (CategoryMapping.ContainsKey(categoryAction))
+            {
+                newCategory = CategoryMapping[categoryAction];  // Update category
+            }
+            else
+            {
+                newCategory = null; // Prevent invalid selection
+            }
+        }
+        else
+        {
+            newCategory = null; // If income, remove category
+        }
 
         // Update Transaction
         transaction.Description = newDescription;
         transaction.Amount = newAmount;
-        transaction.Type = action == "Income" ? TransactionType.Income : TransactionType.Expense;
+        transaction.Type = newType;
+        transaction.Category = newCategory; // Allow null for income transactions
 
         _databaseService.UpdateTransaction(transaction);
         TransactionsList.ItemsSource = null;
@@ -164,8 +241,4 @@ public partial class TransactionsPage : ContentPage
     {
         OnPropertyChanged(nameof(TotalBalance));
     }
-
-
-
 }
-

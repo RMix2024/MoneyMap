@@ -1,56 +1,171 @@
-﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<!--<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+
              x:Class="MoneyMap.MainPage">
 
 
 
-    <VerticalStackLayout Padding="20">
+    <VerticalStackLayout Padding="20" Spacing="15">
 
-     
-        <Border Stroke="Gray" StrokeThickness="2" BackgroundColor="#D6EAF8"
-        Margin="5" Padding="15" WidthRequest="350"
-        StrokeShape="RoundRectangle 10">
-            <VerticalStackLayout>
-                <Label Text="Total Balance" FontSize="20" FontAttributes="Bold"
-               HorizontalOptions="Center" TextColor="DarkBlue"/>
+        --><!-- Total Balance --><!--
+        <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+            <VerticalStackLayout Padding="15">
+                <Label Text="Total Balance"
+                   FontAttributes="Bold"
+                   FontSize="20"
+                   TextColor="Blue"
+                   HorizontalOptions="Center"/>
+                <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+       FontSize="26"
+       FontAttributes="Bold"
+       TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+       HorizontalOptions="Center"/>
 
-                <Label Text="{Binding TotalBalance, StringFormat='${0:F2}'}"
-               FontSize="28" FontAttributes="Bold" TextColor="DarkGreen"
-               HorizontalOptions="Center"/>
-
-                <Grid Padding="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Income Label -->
-                    <Border Stroke="Black" StrokeThickness="1" BackgroundColor="#B8E994"
-                    Padding="8" StrokeShape="RoundRectangle 5"
-                    HorizontalOptions="Center">
-                        <Label Text="Income" FontSize="16" FontAttributes="Bold"
-                       TextColor="Black" HorizontalOptions="Center"/>
-                    </Border>
-
-                    <!-- Expenses Label -->
-                    <Border Stroke="Black" StrokeThickness="1" BackgroundColor="#FFADAD"
-                    Padding="8" StrokeShape="RoundRectangle 5"
-                    HorizontalOptions="Center" Grid.Column="1">
-                        <Label Text="Expenses" FontSize="16" FontAttributes="Bold"
-                       TextColor="Black" HorizontalOptions="Center"/>
-                    </Border>
-
-                    <Label Text="{Binding TotalIncome, StringFormat='${0:F2}'}" FontSize="18"
-                   Grid.Column="0" TextColor="Green" HorizontalOptions="Center"/>
-                    <Label Text="{Binding TotalExpenses, StringFormat='-${0:F2}'}" FontSize="18"
-                   Grid.Column="1" TextColor="Red" HorizontalOptions="Center"/>
-                </Grid>
             </VerticalStackLayout>
         </Border>
 
-     
+        --><!-- Income vs Expenses Chart --><!--
+        <microcharts:ChartView Chart="{Binding IncomeVsExpenseChart}"
+                           HeightRequest="150"
+                           BackgroundColor="Transparent"/>
+
+        --><!-- Expense Breakdown Pie Chart --><!--
+        <microcharts:ChartView Chart="{Binding ExpenseBreakdownChart}"
+                           HeightRequest="200"
+                           BackgroundColor="Transparent"/>
+
+        --><!-- Recent Transactions --><!--
+        <CollectionView ItemsSource="{Binding RecentTransactions}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="#1E1E1E" StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 10" Margin="5">
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Description}"
+                               FontSize="16"
+                               VerticalOptions="Center"
+                               TextColor="White"
+                               Grid.Column="0"/>
+
+                            <Label Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="End"
+                               TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"
+                               Grid.Column="1"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </VerticalStackLayout>
 
+
+
+</ContentPage>-->
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="MoneyMap.MainPage"
+             BackgroundColor="#181818">
+
+    <ScrollView
+        BackgroundColor="#181818"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+        
+        <VerticalStackLayout Padding="20" Spacing="15" WidthRequest="500" HorizontalOptions="Center">
+
+            <!-- Total Balance -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Balance"
+                       FontAttributes="Bold"
+                       FontSize="20"
+                       TextColor="Blue"
+                       HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Income vs Expenses Chart -->
+            <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="10">
+                    <Label Text="Income vs Expenses"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <microcharts:ChartView Chart="{Binding IncomeVsExpenseChart}"
+                                           HeightRequest="180"
+                                           WidthRequest="300"
+                                           HorizontalOptions="Center"
+                                           BackgroundColor="Transparent"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Expense Breakdown Pie Chart -->
+            <Border BackgroundColor="Transparent" StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Expense Breakdown"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="White" />
+                    <microcharts:ChartView Chart="{Binding ExpenseBreakdownChart}"
+                                           HeightRequest="200"
+                                           BackgroundColor="white"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Recent Transactions -->
+            <Label Text="Recent Transactions" BackgroundColor="White"
+                   FontAttributes="Bold" 
+                   FontSize="18" 
+                   TextColor="White" 
+                   HorizontalOptions="Center"
+                   Margin="10"/>
+
+            <CollectionView ItemsSource="{Binding RecentTransactions}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#1E1E1E" StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 10" Margin="5">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Label Text="{Binding Description}"
+                                       FontSize="16"
+                                       VerticalOptions="Center"
+                                       TextColor="White"
+                                       Grid.Column="0"/>
+
+                                <Label Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="End"
+                                       TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"
+                                       Grid.Column="1"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

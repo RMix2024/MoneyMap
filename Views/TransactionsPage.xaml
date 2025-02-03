@@ -13,7 +13,8 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="25" Spacing="20">
+        <VerticalStackLayout Padding="25" Spacing="20" 
+                             BackgroundColor="#181818">
 
             <!-- Title -->
             <Label Text="Transactions"
@@ -47,13 +48,22 @@
                             TextColor="White"
                             BackgroundColor="#333"
                             Margin="0,5"/>
+
+                    <Picker x:Name="CategoryPicker"
+                            Title="Select One"
+                            ItemsSource="{Binding Categories}"
+                            SelectedIndexChanged="OnCategoryChanged"
+                            TextColor="White"
+                            BackgroundColor="#333"
+                            Margin="0,5"/>
+
                 </VerticalStackLayout>
             </Border>
 
             <!-- Add Transaction Button -->
             <Button Text="Add Transaction"
                     Clicked="OnAddTransactionClicked"
-                    BackgroundColor="#D8BFD8"
+                    BackgroundColor="#8C5EBD"
                     TextColor="Black"
                     FontAttributes="Bold"
                     HeightRequest="50"

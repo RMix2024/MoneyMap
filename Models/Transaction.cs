@@ -12,6 +12,18 @@ namespace MoneyMap.Models
         Income,
         Expense
     }
+
+    public enum TransactionCategory
+    {
+        Food_And_Dining,
+        Bills_And_Utilities,
+        Shopping,
+        Entertainment,
+        Transportation,
+        Health_And_Fitness,
+        Savings_And_Investments,
+        Other
+    }
     public class Transaction
     {
         [PrimaryKey, AutoIncrement]
@@ -20,6 +32,8 @@ namespace MoneyMap.Models
         public string Description { get; set; } = string.Empty;
 
         public decimal Amount { get; set; }
+
+        public TransactionCategory? Category { get; set; }
 
         public DateTime Date { get; set; }
         public TransactionType Type { get; set; }

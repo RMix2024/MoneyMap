@@ -8,6 +8,7 @@ namespace MoneyMap
         {
             InitializeComponent();
 
+
          // Apply Windows-specific style globally
 #if WINDOWS
             Resources["DefaultPageStyle"] = Resources["WindowsPageStyle"];

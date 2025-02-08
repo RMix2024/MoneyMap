@@ -1,0 +1,105 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             xmlns:converters="clr-namespace:MoneyMap2.Converters"
+             Style="{StaticResource DefaultPageStyle}"
+             x:Class="MoneyMap2.MainPage"
+             BackgroundColor="#181818">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView BackgroundColor="#181818">
+
+        <VerticalStackLayout Padding="25" 
+                             Spacing="20"
+                             
+                             HorizontalOptions="Center">
+
+            <!-- Title -->
+            <Label Text="Summary"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#C6A0FF"/>
+
+            <!-- Total Balance -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Balance"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="Blue"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Income vs Expenses Chart -->
+            <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="10">
+                    <Label Text="Income vs Expenses" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <lvc:PieChart Series="{Binding IncomeVsExpenseSeries}" HeightRequest="300" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Expense Breakdown Pie Chart -->
+            <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="10">
+                    <Label Text="Expense Breakdown" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <lvc:PieChart Series="{Binding ExpenseBreakdownSeries}" HeightRequest="300" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Recent Transactions -->
+            <Label Text="Recent Transactions"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Margin="10"/>
+
+            <CollectionView x:Name="RecentTransactionsList"
+                            ItemsSource="{Binding RecentTransactions}"
+                            Margin="10"
+                            HeightRequest="300">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#1E1E1E" StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 10" Margin="5">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Transaction Description -->
+                                <Label Text="{Binding Description}"
+                                       FontSize="16"
+                                       VerticalOptions="Center"
+                                       TextColor="White"
+                                       Grid.Column="0"/>
+
+                                <!-- Transaction Amount -->
+                                <Label Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="End"
+                                       TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"
+                                       Grid.Column="1"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
+

@@ -62,26 +62,38 @@ public partial class MainPage : ContentPage
         var income = Transactions.Where(t => t.Type == TransactionType.Income).Sum(t => t.Amount);
         var expenses = Transactions.Where(t => t.Type == TransactionType.Expense).Sum(t => t.Amount);
 
+        // ✅ Check if transactions exist
+        if (Transactions.Count == 0 || (income == 0 && expenses == 0))
+        {
+            // ✅ Completely clear the charts to hide them
+            IncomeVsExpenseSeries = Array.Empty<ISeries>();
+            ExpenseBreakdownSeries = Array.Empty<ISeries>();
+
+            OnPropertyChanged(nameof(IncomeVsExpenseSeries));
+            OnPropertyChanged(nameof(ExpenseBreakdownSeries));
+            return; // ✅ Exit early to prevent unnecessary processing
+        }
+
         IncomeVsExpenseSeries = new ISeries[]
         {
-            new PieSeries<double>
-            {
-                Values = new double[] { (double)income },
-                Name = "Income",
-                Fill = new SolidColorPaint(SKColors.Green),
-                DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                DataLabelsSize = 20,
-                DataLabelsPosition = PolarLabelsPosition.Outer
-            },
-            new PieSeries<double>
-            {
-                Values = new double[] { (double)expenses },
-                Name = "Expenses",
-                Fill = new SolidColorPaint(SKColors.Red),
-                DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                DataLabelsSize = 20,
-                DataLabelsPosition = PolarLabelsPosition.Outer
-            }
+        new PieSeries<double>
+        {
+            Values = new double[] { (double)income },
+            Name = "Income",
+            Fill = new SolidColorPaint(SKColors.Green),
+            DataLabelsPaint = new SolidColorPaint(SKColors.White),
+            DataLabelsSize = 20,
+            DataLabelsPosition = PolarLabelsPosition.Outer
+        },
+        new PieSeries<double>
+        {
+            Values = new double[] { (double)expenses },
+            Name = "Expenses",
+            Fill = new SolidColorPaint(SKColors.Red),
+            DataLabelsPaint = new SolidColorPaint(SKColors.White),
+            DataLabelsSize = 20,
+            DataLabelsPosition = PolarLabelsPosition.Outer
+        }
         };
 
         var categoryGroups = Transactions
@@ -103,5 +115,6 @@ public partial class MainPage : ContentPage
         OnPropertyChanged(nameof(IncomeVsExpenseSeries));
         OnPropertyChanged(nameof(ExpenseBreakdownSeries));
     }
+
 
 }

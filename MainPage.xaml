@@ -9,6 +9,9 @@
         <ResourceDictionary>
             <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
             <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+            <converters:EmptyDataConverter x:Key="EmptyDataConverter"/>
+            <converters:DataVisibilityConverter x:Key="DataVisibilityConverter"/>
+            <converters:EmptyVisibilityConverter x:Key="EmptyVisibilityConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -44,18 +47,77 @@
             <!-- Income vs Expenses Chart -->
             <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
                 <VerticalStackLayout Padding="10">
-                    <Label Text="Income vs Expenses" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <lvc:PieChart Series="{Binding IncomeVsExpenseSeries}" HeightRequest="300" />
+                    <Label Text="Income vs Expenses"
+               FontSize="20"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+                           TextColor="white"/>
+
+                    <Grid>
+                        <!-- Chart (Hidden if No Data) -->
+                        <lvc:PieChart Series="{Binding IncomeVsExpenseSeries}"
+                          HeightRequest="300"
+                          IsVisible="{Binding IncomeVsExpenseSeries.Count, Converter={StaticResource DataVisibilityConverter}}"/>
+
+                        <!-- Placeholder UI for Empty State -->
+                        <VerticalStackLayout IsVisible="{Binding IncomeVsExpenseSeries.Count, Converter={StaticResource EmptyVisibilityConverter}}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="10">
+
+                            <!-- Subtle Icon -->
+                            <Image Source="empty_chart_icon.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       Opacity="0.5"/>
+
+                            <Label Text="No income or expenses yet"
+                       FontSize="16"
+                       TextColor="Gray"
+                       FontAttributes="Italic"
+                       HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
+
 
             <!-- Expense Breakdown Pie Chart -->
             <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
                 <VerticalStackLayout Padding="10">
-                    <Label Text="Expense Breakdown" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <lvc:PieChart Series="{Binding ExpenseBreakdownSeries}" HeightRequest="300" />
+                    <Label Text="Expense Breakdown"
+               FontSize="20"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+                           TextColor="White"/>
+
+                    <Grid>
+                        <!-- Pie Chart -->
+                        <lvc:PieChart Series="{Binding ExpenseBreakdownSeries}"
+                          HeightRequest="300"
+                          IsVisible="{Binding ExpenseBreakdownSeries.Count, Converter={StaticResource DataVisibilityConverter}}"/>
+
+                        <!-- Placeholder for No Data -->
+                        <VerticalStackLayout IsVisible="{Binding ExpenseBreakdownSeries.Count, Converter={StaticResource EmptyVisibilityConverter}}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="10">
+
+                            <Image Source="empty_expense_icon.png"
+                       WidthRequest="100"
+                       HeightRequest="100"
+                       Opacity="0.5"/>
+
+                            <Label Text="No expenses recorded"
+                       FontSize="16"
+                       TextColor="Gray"
+                       FontAttributes="Italic"
+                       HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
+
 
             <!-- Recent Transactions -->
             <Label Text="Recent Transactions"

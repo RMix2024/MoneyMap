@@ -9,18 +9,19 @@
     BackgroundColor="#181818"
     Shell.ForegroundColor="White"
     Shell.FlyoutBehavior="Flyout"
-    Shell.TitleColor="White"
+    Shell.TitleColor="MediumPurple"
 
     Title="MoneyMap">
+
 
     <!-- Flyout Header (Ensures "MoneyMap" Shows Up) -->
     <Shell.FlyoutHeader>
         <Grid BackgroundColor="#181818" Padding="20">
-            <Label Text="MoneyMap"
-                   TextColor="White"
+            <Label Text="Money Map"
+                   TextColor="#C6A0FF"
                    FontSize="24"
                    FontAttributes="Bold"
-                   HorizontalOptions="Start"/>
+                   HorizontalOptions="Center"/>
         </Grid>
     </Shell.FlyoutHeader>
 
@@ -38,25 +39,25 @@
         </DataTemplate>
     </Shell.ItemTemplate>
 
-    <ShellContent  
-        Route="MainPage" 
-        ContentTemplate="{DataTemplate local:MainPage}"/>
 
-    <FlyoutItem Title="Home" >
+
+    <FlyoutItem Title="Home">
         <FlyoutItem.Icon>
-
-            <FontImageSource Glyph="&#xf015;" FontFamily="FontAwesomeSolid" Size="30"/>
+            <FontImageSource Glyph="&#xf015;" 
+                             FontFamily="FontAwesomeSolid"                              
+                             Size="28"/>
         </FlyoutItem.Icon>
         <ShellContent
                     ContentTemplate="{DataTemplate local:MainPage}"
-                     Route="MainPage"
-            />
+                     Route="MainPage"/>
     </FlyoutItem>
 
 
     <FlyoutItem Title="Transactions">
         <FlyoutItem.Icon>
-            <FontImageSource Glyph="&#xf0d6;" FontFamily="FontAwesomeSolid" Size="30" />
+            <FontImageSource Glyph="&#xf0d6;" 
+                             FontFamily="FontAwesomeSolid" 
+                             Size="28" />
         </FlyoutItem.Icon>
         <ShellContent
                      ContentTemplate="{DataTemplate views:TransactionsPage}"

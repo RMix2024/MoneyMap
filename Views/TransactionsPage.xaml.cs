@@ -4,6 +4,7 @@ using MoneyMap2.Data;
 using System.Collections.ObjectModel;
 using Microsoft.Maui.Controls;
 using System;
+using CommunityToolkit.Maui.Alerts;
 
 
 namespace MoneyMap2.Views;
@@ -113,30 +114,30 @@ public partial class TransactionsPage : ContentPage
         }
     }
 
-    private void OnAddTransactionClicked(object sender, EventArgs e)
+    private async void OnAddTransactionClicked(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(DescriptionEntry.Text))
         {
-            DisplayAlert("Error", "Please enter a description.", "OK");
+           await DisplayAlert("Error", "Please enter a description.", "OK");
             return;
         }
 
         if (!decimal.TryParse(AmountEntry.Text, out decimal amount))
         {
-            DisplayAlert("Error", "Invalid amount. Please enter a valid number.", "OK");
+           await DisplayAlert("Error", "Invalid amount. Please enter a valid number.", "OK");
             return;
         }
 
         if (selectedTransactionType == null)
         {
-            DisplayAlert("Error", "Please select Income or Expense", "OK");
+            await DisplayAlert("Error", "Please select Income or Expense", "OK");
             return;
         }
 
         // Category is required **only for Expense transactions**
         if (selectedTransactionType == TransactionType.Expense && selectedCategory == null)
         {
-            DisplayAlert("Error", "Please select a category for expenses.", "OK");
+           await DisplayAlert("Error", "Please select a category for expenses.", "OK");
             return;
         }
 
@@ -154,6 +155,22 @@ public partial class TransactionsPage : ContentPage
         UpdateBalance();
         DescriptionEntry.Text = string.Empty;
         AmountEntry.Text = string.Empty;
+
+        //Show Snackbar with Undo Option
+        var snackbar = Snackbar.Make(
+            "Transaction added successfully!",
+            async () =>
+            {
+                // Undo: Remove last transaction
+                Transactions.Remove(newTransaction);
+                _databaseService.DeleteTransaction(newTransaction);
+                UpdateBalance();
+            },
+            "Undo",
+            TimeSpan.FromSeconds(3) // Show for 3 seconds
+        );
+
+        await snackbar.Show();
     }
 
     private async void OnEditTransactionClicked(object sender, EventArgs e)

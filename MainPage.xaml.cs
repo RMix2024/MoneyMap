@@ -8,6 +8,7 @@ using LiveChartsCore;
 using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.Drawing;
 
 
 namespace MoneyMap2;
@@ -82,8 +83,12 @@ public partial class MainPage : ContentPage
             Name = "Income",
             Fill = new SolidColorPaint(SKColors.Green),
             DataLabelsPaint = new SolidColorPaint(SKColors.White),
-            DataLabelsSize = 20,
-            DataLabelsPosition = PolarLabelsPosition.Outer
+            DataLabelsSize = 18,
+            DataLabelsPosition = PolarLabelsPosition.Middle,
+            DataLabelsFormatter = point => $"Income: {point.Model:N2}",
+            DataLabelsPadding = new Padding(10),
+             Pushout= 5
+
         },
         new PieSeries<double>
         {
@@ -91,8 +96,11 @@ public partial class MainPage : ContentPage
             Name = "Expenses",
             Fill = new SolidColorPaint(SKColors.Red),
             DataLabelsPaint = new SolidColorPaint(SKColors.White),
-            DataLabelsSize = 20,
-            DataLabelsPosition = PolarLabelsPosition.Outer
+            DataLabelsSize = 18,
+            DataLabelsPosition = PolarLabelsPosition.Middle,
+            DataLabelsFormatter = point => $"Expense: {point.Model:N2}",
+             DataLabelsPadding = new Padding(10),
+              Pushout= 5
         }
         };
 
@@ -106,7 +114,10 @@ public partial class MainPage : ContentPage
                 Fill = new SolidColorPaint(SKColor.Parse("#" + new Random().Next(0x1000000).ToString("X6"))),
                 DataLabelsPaint = new SolidColorPaint(SKColors.White),
                 DataLabelsSize = 18,
-                DataLabelsPosition = PolarLabelsPosition.Middle
+                DataLabelsPosition = PolarLabelsPosition.Middle,
+                DataLabelsFormatter = point => $"{point.Context.Series.Name}:{point.Model:N2} ", // ✅ Display category + amount
+                DataLabelsPadding = new Padding(10),
+                Pushout= 5
             })
             .ToArray();
 

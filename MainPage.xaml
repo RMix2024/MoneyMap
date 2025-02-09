@@ -1,7 +1,7 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              xmlns:converters="clr-namespace:MoneyMap2.Converters"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
              Style="{StaticResource DefaultPageStyle}"
              x:Class="MoneyMap2.MainPage"
              BackgroundColor="#181818">
@@ -10,30 +10,28 @@
             <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
             <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
             <converters:EmptyDataConverter x:Key="EmptyDataConverter"/>
-            <converters:DataVisibilityConverter x:Key="DataVisibilityConverter"/>
-            <converters:EmptyVisibilityConverter x:Key="EmptyVisibilityConverter"/>
+     
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView BackgroundColor="#181818">
 
         <VerticalStackLayout Padding="25" 
-                             Spacing="20"
-                             
-                             HorizontalOptions="Center">
-
+                             Spacing="20">
             <!-- Title -->
             <Label Text="Summary"
-                   FontSize="28"
+                   FontSize="32"
                    FontAttributes="Bold"
-                   TextColor="#C6A0FF"/>
+                   TextColor="#C6A0FF"
+                   HorizontalOptions="Center"/>
 
+        
             <!-- Total Balance -->
             <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
                 <VerticalStackLayout Padding="15">
                     <Label Text="Total Balance"
                            FontAttributes="Bold"
-                           FontSize="20"
+                           FontSize="18"
                            TextColor="Blue"
                            HorizontalOptions="Center"/>
                     <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
@@ -43,45 +41,31 @@
                            HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Border>
+           
 
+       
             <!-- Income vs Expenses Chart -->
             <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
                 <VerticalStackLayout Padding="10">
                     <Label Text="Income vs Expenses"
-               FontSize="20"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
                            TextColor="white"/>
-
                     <Grid>
-                        <!-- Chart (Hidden if No Data) -->
-                        <lvc:PieChart Series="{Binding IncomeVsExpenseSeries}"
-                          HeightRequest="300"
-                          IsVisible="{Binding IncomeVsExpenseSeries.Count, Converter={StaticResource DataVisibilityConverter}}"/>
-
-                        <!-- Placeholder UI for Empty State -->
-                        <VerticalStackLayout IsVisible="{Binding IncomeVsExpenseSeries.Count, Converter={StaticResource EmptyVisibilityConverter}}"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 Spacing="10">
-
-                            <!-- Subtle Icon -->
-                            <Image Source="empty_chart_icon.png"
-                       WidthRequest="100"
-                       HeightRequest="100"
-                       Opacity="0.5"/>
-
-                            <Label Text="No income or expenses yet"
-                       FontSize="16"
-                       TextColor="Gray"
-                       FontAttributes="Italic"
-                       HorizontalOptions="Center"/>
-                        </VerticalStackLayout>
+                        <lvc:PieChart
+                            Series="{Binding IncomeVsExpenseSeries}"
+                            HeightRequest="300"
+                            WidthRequest="300">
+                        </lvc:PieChart>
+                                        
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
 
+                
+          
             <!-- Expense Breakdown Pie Chart -->
             <Border StrokeThickness="1" Stroke="#333" StrokeShape="RoundRectangle 15">
                 <VerticalStackLayout Padding="10">
@@ -89,34 +73,23 @@
                FontSize="20"
                FontAttributes="Bold"
                HorizontalOptions="Center"
-                           TextColor="White"/>
+               TextColor="White" />
 
                     <Grid>
-                        <!-- Pie Chart -->
-                        <lvc:PieChart Series="{Binding ExpenseBreakdownSeries}"
-                          HeightRequest="300"
-                          IsVisible="{Binding ExpenseBreakdownSeries.Count, Converter={StaticResource DataVisibilityConverter}}"/>
+                        
+                        <!-- ✅ Pie Chart with Labels -->
+                        <lvc:PieChart
+                            Series="{Binding ExpenseBreakdownSeries}"   
+                            HeightRequest="300" 
+                            WidthRequest="300">
 
-                        <!-- Placeholder for No Data -->
-                        <VerticalStackLayout IsVisible="{Binding ExpenseBreakdownSeries.Count, Converter={StaticResource EmptyVisibilityConverter}}"
-                                 HorizontalOptions="Center"
-                                 VerticalOptions="Center"
-                                 Spacing="10">
-
-                            <Image Source="empty_expense_icon.png"
-                       WidthRequest="100"
-                       HeightRequest="100"
-                       Opacity="0.5"/>
-
-                            <Label Text="No expenses recorded"
-                       FontSize="16"
-                       TextColor="Gray"
-                       FontAttributes="Italic"
-                       HorizontalOptions="Center"/>
-                        </VerticalStackLayout>
+                        </lvc:PieChart>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+
+
+
 
 
             <!-- Recent Transactions -->
@@ -126,6 +99,7 @@
                    TextColor="White"
                    HorizontalOptions="Center"
                    Margin="10"/>
+            <Grid>
 
             <CollectionView x:Name="RecentTransactionsList"
                             ItemsSource="{Binding RecentTransactions}"
@@ -156,9 +130,11 @@
                                        Grid.Column="1"/>
                             </Grid>
                         </Border>
+                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>

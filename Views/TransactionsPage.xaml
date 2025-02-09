@@ -21,7 +21,8 @@
                    FontSize="28"
                    FontAttributes="Bold"
                    TextColor="#C6A0FF"
-                   Margin="0,0,0,10"/>
+                   Margin="0,0,0,10"
+                   HorizontalOptions="Center"/>
 
             <!-- Input Section -->
             <Border BackgroundColor="#252525" StrokeThickness="1" Stroke="#3A3A3A" StrokeShape="RoundRectangle 12">
@@ -42,7 +43,7 @@
                            Margin="0,5"/>
 
                     <Picker x:Name="TransactionTypePicker"
-                            Title="Select One"
+                            Title="Transaction Type"
                             ItemsSource="{Binding TransactionTypes}"
                             SelectedIndexChanged="OnTransactionTypeChanged"
                             TextColor="White"
@@ -50,7 +51,7 @@
                             Margin="0,5"/>
 
                     <Picker x:Name="CategoryPicker"
-                            Title="Select One"
+                            Title="Category"
                             ItemsSource="{Binding Categories}"
                             SelectedIndexChanged="OnCategoryChanged"
                             TextColor="White"

@@ -2,7 +2,7 @@
 namespace MoneyMap.PageModels;
 
 public partial class MainPageModel : ObservableObject
-{
+    {
     private readonly TransactionService _transactionService;
     private readonly BudgetService _budgetService;
     private readonly CategoryService _categoryService;
@@ -10,10 +10,10 @@ public partial class MainPageModel : ObservableObject
 
     private ObservableCollection<Transaction> _transactions = new();
     public ObservableCollection<Transaction> Transactions
-    {
+        {
         get => _transactions;
         set => SetProperty(ref _transactions, value);
-    }
+        }
 
 
     [ObservableProperty]
@@ -21,10 +21,10 @@ public partial class MainPageModel : ObservableObject
 
     private decimal _totalBalance;
     public decimal TotalBalance
-    {
+        {
         get => _totalBalance;
         set => SetProperty(ref _totalBalance, value);
-    }
+        }
 
 
     [ObservableProperty]
@@ -38,7 +38,7 @@ public partial class MainPageModel : ObservableObject
 
     public MainPageModel(TransactionService transactionService, BudgetService budgetService,
         CategoryService categoryService, ModalErrorHandler errorHandler)
-    {
+        {
         _transactionService = transactionService;
         _budgetService = budgetService;
         _categoryService = categoryService;
@@ -47,12 +47,12 @@ public partial class MainPageModel : ObservableObject
         _budgetCategories = new ObservableCollection<BudgetCategory>();
 
         _ = LoadData(); // Explicitly ignore result but keep async behavior
-    }
+        }
 
     private async Task LoadData()
-    {
-        try
         {
+        try
+            {
             IsBusy = true;
 
             // Load transactions and budget categories
@@ -63,57 +63,57 @@ public partial class MainPageModel : ObservableObject
             BudgetCategories = new ObservableCollection<BudgetCategory>(budgetCategories);
 
             UpdateBalance();
-        }
+            }
         catch (Exception e)
-        {
+            {
             _errorHandler.HandleError(e);
-        }
+            }
         finally
-        {
+            {
             IsBusy = false;
+            }
         }
-    }
 
     private void UpdateBalance()
-    {
+        {
         TotalBalance = Transactions.Sum(t => t.Type == TransactionType.Income ? t.Amount : -t.Amount);
-    }
+        }
 
     [RelayCommand]
     private async Task Refresh()
-    {
-        try
         {
+        try
+            {
             IsRefreshing = true;
             await LoadData();
-        }
+            }
         catch (Exception e)
-        {
+            {
             _errorHandler.HandleError(e);
-        }
+            }
         finally
-        {
+            {
             IsRefreshing = false;
+            }
         }
-    }
 
     [RelayCommand]
     private async Task AddTransaction()
-    {
+        {
         await Shell.Current.GoToAsync("addTransactionPage");
-    }
+        }
 
     [RelayCommand]
     private async Task EditTransaction(Transaction transaction)
-    {
+        {
         if (transaction == null) return;
 
         await Shell.Current.GoToAsync($"editTransactionPage?id={transaction.Id}");
-    }
+        }
 
     [RelayCommand]
     private async Task DeleteTransaction(Transaction transaction)
-    {
+        {
         if (transaction == null) return;
 
         bool confirm = await Shell.Current.DisplayAlert("Confirm Delete",
@@ -121,10 +121,10 @@ public partial class MainPageModel : ObservableObject
 
 
         if (confirm)
-        {
+            {
             await _transactionService.DeleteTransactionAsync(transaction);
             Transactions.Remove(transaction);
             UpdateBalance();
+            }
         }
     }
-}

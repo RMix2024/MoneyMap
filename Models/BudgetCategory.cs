@@ -1,18 +1,33 @@
-﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
-
-
-namespace MoneyMap.Models
-{
-    public class BudgetCategory
+﻿namespace MoneyMap.Models
     {
-        [PrimaryKey, AutoIncrement]  // ✅ This makes it a unique identifier
+    public class BudgetCategory : INotifyPropertyChanged
+        {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public decimal BudgetAmount { get; set; } // Stores the budget amount
+        private decimal _budgetAmount; // ✅ Backing field
 
-        [ForeignKey(typeof(Category))] // ✅ Link to Category table
+        public decimal BudgetAmount
+            {
+            get => _budgetAmount;
+            set
+                {
+                if (_budgetAmount != value)
+                    {
+                    _budgetAmount = value;
+                    OnPropertyChanged(nameof(BudgetAmount)); // ✅ Notify UI of change
+                    }
+                }
+            }
+
+        [ForeignKey(typeof(Category))]
         public int CategoryId { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName) // ✅ Fix: Ensure Method Exists
+            {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
-}

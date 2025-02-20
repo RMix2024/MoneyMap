@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MoneyMap.Models
-{
-    public class RecurringTransaction
+﻿namespace MoneyMap.Models
     {
+    public class RecurringTransaction
+        {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
@@ -24,5 +18,5 @@ namespace MoneyMap.Models
         public int FrequencyDays { get; set; } // e.g., 30 for monthly, 7 for weekly
 
         public bool IsActive { get; set; } = true;
+        }
     }
-}

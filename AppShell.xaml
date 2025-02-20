@@ -17,7 +17,7 @@
     </FlyoutItem>
 
     <!-- Budget -->
-    <FlyoutItem Title="Budget" Icon="{StaticResource IconBudget}" Route="budget">
+    <FlyoutItem Title="Budget" Icon="{StaticResource IconBudget}" Route="budgets">
         <ShellContent ContentTemplate="{DataTemplate pages:BudgetPage}" />
     </FlyoutItem>
 

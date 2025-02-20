@@ -2,11 +2,11 @@
 
 
 namespace MoneyMap
-{
-    public static class MauiProgram
     {
-        public static MauiApp CreateMauiApp()
+    public static class MauiProgram
         {
+        public static MauiApp CreateMauiApp()
+            {
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -14,7 +14,7 @@ namespace MoneyMap
                 {
                     options.SetShouldEnableSnackbarOnWindows(true);
                 })
-                
+
                 .ConfigureMauiHandlers(handlers =>
                 {
                 })
@@ -32,23 +32,23 @@ namespace MoneyMap
             builder.ConfigureLifecycleEvents(events =>
             {
 #if WINDOWS
-events.AddWindows(w => w.OnWindowCreated(window =>
-{
-    var nativeWindow = (Microsoft.UI.Xaml.Window)window;
-    nativeWindow.Activate();
+                events.AddWindows(w => w.OnWindowCreated(window =>
+                {
+                    var nativeWindow = (Microsoft.UI.Xaml.Window)window;
+                    nativeWindow.Activate();
 
-    //  Get the WindowId
-    var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
-    var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
+                    //  Get the WindowId
+                    var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
+                    var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
 
-    //  Get the AppWindow instance
-    var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+                    //  Get the AppWindow instance
+                    var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
 
-    if (appWindow != null)
-    {
-        appWindow.Resize(new Windows.Graphics.SizeInt32(1200, 800)); // Set Width x Height
-    }
-}));
+                    if (appWindow != null)
+                        {
+                        appWindow.Resize(new Windows.Graphics.SizeInt32(1200, 800)); // Set Width x Height
+                        }
+                }));
 #endif
 
             });
@@ -56,7 +56,7 @@ events.AddWindows(w => w.OnWindowCreated(window =>
 
 #if DEBUG
             builder.Logging.AddDebug();
-    		builder.Services.AddLogging(configure => configure.AddDebug());
+            builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
             builder.Services.AddSingleton<BudgetService>();
@@ -65,12 +65,12 @@ events.AddWindows(w => w.OnWindowCreated(window =>
             builder.Services.AddSingleton<TransactionService>();
             builder.Services.AddSingleton<ModalErrorHandler>();
             builder.Services.AddSingleton<MainPageModel>();
+            builder.Services.AddSingleton<TransactionsPageModel>();
+            builder.Services.AddSingleton<BudgetPageModel>();
 
 
-            //builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
-            //builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
-           
+
             return builder.Build();
+            }
         }
     }
-}

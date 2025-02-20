@@ -1,12 +1,106 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MoneyMap.PageModels"
+             xmlns:converters="clr-namespace:MoneyMap.Converters"
              x:Class="MoneyMap.Pages.BudgetPage"
+             xmlns:models="clr-namespace:MoneyMap.Models"
+
+             x:DataType="local:BudgetPageModel"
+             BackgroundColor="#181818"
              Title="BudgetPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+            <converters:EmptyDataConverter x:Key="EmptyDataConverter"/>
+            <converters:CategoryIdToNameConverter x:Key="CategoryIdToNameConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView BackgroundColor="#181818">
+        <Grid RowDefinitions="Auto,Auto,*,Auto"
+          Padding="25"
+          RowSpacing="20">
+            <VerticalStackLayout Padding="25" Spacing="20" HorizontalOptions="Center">
+
+            <!-- Title -->
+            <Label Text="Budget Overview"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#C6A0FF"
+                   HorizontalOptions="Center"/>
+
+            <!-- Total Budget Balance -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Budget"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="Blue"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBudget, StringFormat='{}{0:C}'}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{Binding TotalBudget, Converter={StaticResource BalanceColorConverter}}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+                
+                <!-- Edit Mode Toggle (Top of Page) -->
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Edit Mode" TextColor="White" VerticalOptions="Center"/>
+                    <Switch x:Name="EditModeSwitch" IsToggled="{Binding IsEditMode, Mode=TwoWay}"/>
+                </HorizontalStackLayout>
+
+                <!-- Budget Categories List -->
+            <CollectionView x:Name="BudgetCategoriesList"
+                            ItemsSource="{Binding BudgetCategories}"
+                            Margin="10">
+                <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:BudgetCategory}">
+                        <Border BackgroundColor="#1E1E1E"
+                                StrokeThickness="1"
+                                Stroke="#333"
+                                StrokeShape="RoundRectangle 10"
+                                Margin="2">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Category Name -->
+                                <Label Text="{Binding CategoryId, Converter={StaticResource CategoryIdToNameConverter}}"
+                                       FontSize="16"
+                                       VerticalOptions="Center"
+                                       TextColor="White"
+                                       Grid.Column="0"/>
+
+                                    <!-- Budgeted Amount (Label) -->
+                                    <Label Text="{Binding BudgetAmount, StringFormat='{}{0:C}'}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           HorizontalTextAlignment="End"
+                                           IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled, Converter={StaticResource InverseBoolConverter}}"
+                                           TextColor="{Binding BudgetAmount, Converter={StaticResource BalanceColorConverter}}"
+                                           Grid.Column="1"/>
+
+                                    <!-- Slider (Shown When Editing) -->
+                                    <Slider Minimum="0" Maximum="1000" Value="{Binding BudgetAmount, Mode=TwoWay}"
+                                            IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled}"
+                                            Grid.Column="1"/>
+                                
+                                </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+           
+        </VerticalStackLayout>
+            </Grid>
+    </ScrollView>
+
 </ContentPage>

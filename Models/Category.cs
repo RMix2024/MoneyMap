@@ -1,9 +1,7 @@
-﻿using SQLite;
-
-namespace MoneyMap.Models
-{
-    public class Category
+﻿namespace MoneyMap.Models
     {
+    public class Category
+        {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
@@ -12,5 +10,5 @@ namespace MoneyMap.Models
 
         // Predefined categories will have an initial `true` value
         public bool IsPredefined { get; set; } = false;
+        }
     }
-}

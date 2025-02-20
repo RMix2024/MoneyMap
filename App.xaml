@@ -14,7 +14,7 @@
             </Style>
             <x:String x:Key="IconFont">IconFont</x:String>
             <Color x:Key="PrimaryColor">#6200EE</Color>
-            <!-- ✅ Icons -->
+            <!-- Icons -->
             <FontImageSource x:Key="IconTransactions" Glyph="&#xf1c0;" FontFamily="{StaticResource IconFont}"/>
             <FontImageSource x:Key="IconDashboard" Glyph="&#xf015;" FontFamily="{StaticResource IconFont}"/>
             <FontImageSource x:Key="IconBudget" Glyph="&#xf155;" FontFamily="{StaticResource IconFont}" />

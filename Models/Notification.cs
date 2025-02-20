@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MoneyMap.Models
-{
-    public class Notification
+﻿namespace MoneyMap.Models
     {
+    public class Notification
+        {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
@@ -16,6 +10,6 @@ namespace MoneyMap.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public bool IsRead { get; set; } = false;
-    }
+        }
 
-}
+    }

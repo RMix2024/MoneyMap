@@ -1,0 +1,40 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:converters="clr-namespace:MoneyMap.Converters"
+             xmlns:local="clr-namespace:MoneyMap"
+             x:Class="MoneyMap.App">
+    <Application.Resources>
+        <ResourceDictionary>
+                <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+                <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+            <Style x:Key="PopupButtonStyle" TargetType="Button">
+                <Setter Property="WidthRequest" Value="100"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+            <x:String x:Key="IconFont">IconFont</x:String>
+            <Color x:Key="PrimaryColor">#6200EE</Color>
+            <!-- ✅ Icons -->
+            <FontImageSource x:Key="IconTransactions" Glyph="&#xf1c0;" FontFamily="{StaticResource IconFont}"/>
+            <FontImageSource x:Key="IconDashboard" Glyph="&#xf015;" FontFamily="{StaticResource IconFont}"/>
+            <FontImageSource x:Key="IconBudget" Glyph="&#xf155;" FontFamily="{StaticResource IconFont}" />
+            <FontImageSource x:Key="IconReports" Glyph="&#xf200;" FontFamily="{StaticResource IconFont}" />
+            <FontImageSource x:Key="IconSettings" Glyph="&#xf013;" FontFamily="{StaticResource IconFont}" />
+            <!-- Ensure this exists -->
+
+
+
+
+            <!-- Keep MergedDictionaries for styles -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/AppStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--  Place Color Resources Here -->
+
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

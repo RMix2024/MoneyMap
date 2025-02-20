@@ -1,0 +1,141 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MoneyMap.Pages.TransactionsPage"             
+             xmlns:converters="clr-namespace:MoneyMap.Converters"
+         
+             BackgroundColor="#181818">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView BackgroundColor="#181818">
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          Padding="25"
+          RowSpacing="20">
+        <VerticalStackLayout Padding="25" Spacing="20" >
+
+            <!-- Title -->
+            <Label Text="Transactions"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#C6A0FF"
+                   Margin="0,0,0,10"
+                   HorizontalOptions="Center"/>
+
+
+            <!-- Add Transaction Button -->
+             <!--Clicked="OnAddTransactionClicked"-->
+            <Button Text="Add Transaction"
+                    Command="{Binding AddTransactionCommand}" 
+                    BackgroundColor="#8C5EBD"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    CornerRadius="25"
+                    Margin="0,5"/>
+
+            <!-- Edit Mode Toggle -->
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Edit Mode"
+                       TextColor="White"
+                       VerticalOptions="Center"/>
+                <Switch x:Name="EditModeSwitch"
+                        Toggled="OnEditModeToggled"/>
+            </HorizontalStackLayout>
+
+
+            <!-- Total Balance Display -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Balance"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="Blue"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Transactions List -->
+            <CollectionView x:Name="TransactionsList"
+                            ItemsSource="{Binding Transactions}"
+                            Grid.Row="3"
+                            Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#1E1E1E"
+                    StrokeThickness="1"
+                    Stroke="#333"
+                    StrokeShape="RoundRectangle 10"
+                    Margin="2">
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <!-- Description -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Amount -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Edit/Delete Buttons -->
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Transaction Description -->
+                                <Label Text="{Binding Description}"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           TextColor="White"
+                           Grid.Column="0"/>
+
+                                <!-- Transaction Amount (Colored Based on Type) -->
+                                <Label Text="{Binding Amount, StringFormat='{}{0:C}'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="End"
+                           TextColor="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"
+                           Grid.Column="1"/>
+
+                                <!-- Show Edit & Delete Buttons Only When Edit Mode is Enabled --> 
+
+                                <HorizontalStackLayout Grid.Column="2"
+                                         IsVisible="{Binding Source={x:Reference EditModeSwitch}, Path=IsToggled}">
+
+                                    <Button BackgroundColor="Transparent" 
+                                            Padding="0"
+                                            Clicked="OnEditTransactionClicked"
+                                            CommandParameter="{Binding}" >
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#x270E;" FontFamily="FontAwesomeSolid" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
+
+                                    <Button BackgroundColor="Transparent"
+                                            Padding="0"
+                                             Clicked="OnDeleteTransactionClicked"
+                                             CommandParameter="{Binding }" >
+                                        <Button.ImageSource>
+                                            <FontImageSource Glyph="&#x1F5D1;" FontFamily="FontAwesomeSolid" Size="16"/>
+                                        </Button.ImageSource>
+                                    </Button>
+
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+
+
+
+        </VerticalStackLayout>
+    </Grid>
+    </ScrollView>
+
+</ContentPage>

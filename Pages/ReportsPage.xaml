@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MoneyMap.Pages.ReportsPage"
+             Title="ReportsPage"
+             BackgroundColor="#181818">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Page Title -->
+            <Label Text="Financial Reports"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#C6A0FF"
+                   HorizontalOptions="Center"/>
+
+            <!-- Time Range Filter -->
+            <Picker x:Name="TimeRangePicker"
+                    Title="Select Time Range"
+                    SelectedIndexChanged="OnTimeRangeChanged"
+                    TextColor="White">
+                <Picker.Items>
+                    <x:String>This Month</x:String>
+                    <x:String>Last 3 Months</x:String>
+                    <x:String>Last 6 Months</x:String>
+                    <x:String>This Year</x:String>
+                    <x:String>All Time</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <!-- Income vs Expense Graph -->
+            <Frame BorderColor="#333" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Income vs Expenses"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <GraphicsView x:Name="IncomeExpenseChart"
+                                  HeightRequest="200"
+                                  WidthRequest="350"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Expense Breakdown Pie Chart -->
+            <Frame BorderColor="#333" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Expense Breakdown"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <GraphicsView x:Name="ExpenseBreakdownChart"
+                                  HeightRequest="200"
+                                  WidthRequest="350"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Monthly Trends -->
+            <Frame BorderColor="#333" CornerRadius="10" Padding="10">
+                <VerticalStackLayout>
+                    <Label Text="Monthly Trends"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"/>
+                    <GraphicsView x:Name="MonthlyTrendsChart"
+                                  HeightRequest="200"
+                                  WidthRequest="350"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

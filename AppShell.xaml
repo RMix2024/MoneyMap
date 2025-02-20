@@ -1,0 +1,63 @@
+<Shell
+    x:Class="MoneyMap.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MoneyMap.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Title="MoneyMap">
+
+    <!-- Dashboard as Default Page -->
+    <FlyoutItem Title="Dashboard" Icon="{StaticResource IconDashboard}" Route="main">
+        <ShellContent ContentTemplate="{DataTemplate pages:MainPage}" />
+    </FlyoutItem>
+
+    <!-- Transactions -->
+    <FlyoutItem Title="Transactions" Icon="{StaticResource IconTransactions}" Route="transactions">
+        <ShellContent ContentTemplate="{DataTemplate pages:TransactionsPage}" />
+    </FlyoutItem>
+
+    <!-- Budget -->
+    <FlyoutItem Title="Budget" Icon="{StaticResource IconBudget}" Route="budget">
+        <ShellContent ContentTemplate="{DataTemplate pages:BudgetPage}" />
+    </FlyoutItem>
+
+    <!-- Reports -->
+    <FlyoutItem Title="Reports" Icon="{StaticResource IconReports}" Route="reports">
+        <ShellContent ContentTemplate="{DataTemplate pages:ReportsPage}" />
+    </FlyoutItem>
+
+    <!-- Settings -->
+    <FlyoutItem Title="Settings" Icon="{StaticResource IconSettings}" Route="settings">
+        <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
+    </FlyoutItem>
+
+    <!-- Flyout Footer (Example: Theme Selector) -->
+    <Shell.FlyoutFooter>
+        <Grid Padding="15">
+            <StackLayout HorizontalOptions="Center">
+                <!-- Theme Toggle -->
+                <Label Text="Select Theme" HorizontalOptions="Center" FontSize="16" />
+
+                <Picker x:Name="ThemePicker"
+                    Title="Choose Theme"
+                    SelectedIndexChanged="ThemePicker_SelectedIndexChanged">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Light</x:String>
+                            <x:String>Dark</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
+                <!-- App Version -->
+                <Label Text="MoneyMap v1.0.0"
+                   FontSize="12"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
+            </StackLayout>
+        </Grid>
+    </Shell.FlyoutFooter>
+
+
+
+</Shell>

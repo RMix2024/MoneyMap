@@ -1,0 +1,54 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:MoneyMap.Converters" 
+              xmlns:local="clr-namespace:MoneyMap.PageModels"
+             x:Class="MoneyMap.Pages.MainPage"
+             BackgroundColor="#181818"
+              x:DataType="local:MainPageModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BalanceColorConverter x:Key="BalanceColorConverter"/>
+            <converters:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+            <converters:EmptyDataConverter x:Key="EmptyDataConverter"/>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView BackgroundColor="#181818">
+
+        <VerticalStackLayout Padding="25" Spacing="20" HorizontalOptions="Center">
+
+            <!-- Title -->
+            <Label Text="Dashboard"
+               FontSize="28"
+               FontAttributes="Bold"
+               TextColor="#C6A0FF"
+               HorizontalOptions="Center"/>
+
+            <!-- Total Balance -->
+            <Border BackgroundColor="#E3F2FD" StrokeThickness="0" StrokeShape="RoundRectangle 15">
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Total Balance"
+                       FontAttributes="Bold"
+                       FontSize="20"
+                       TextColor="Blue"
+                       HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalBalance, StringFormat='{}{0:C}'}"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="{Binding TotalBalance, Converter={StaticResource BalanceColorConverter}}"
+                       HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Navigation Buttons -->
+            <Button Text="Transactions" Clicked="OnTransactionsClicked" />
+            <Button Text="Budgets" Clicked="OnBudgetsClicked" />
+            <Button Text="Reports" Clicked="OnReportsClicked" />
+            <Button Text="Settings" Clicked="OnSettingsClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
+
